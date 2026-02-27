@@ -1,0 +1,181 @@
+---
+#
+# Network Configuration for National Blockchain Property Register
+# Hyperledger Fabric 2.5+ Topology
+#
+
+version: "2.5"
+
+name: property-register-network
+
+description: |
+  National Blockchain Property Register Network Configuration
+  - 3 Organizations (Gov, Notary, Registry)
+  - 2 Peers per Organization
+  - Single Orderer Node (Solo for dev)
+  - Embedded TLS
+  - LevelDB State Database
+
+channel: property-channel
+
+organizations:
+  Gov:
+    name: Government Authority
+    domain: gov.example.com
+    msp_id: Org1MSP
+    ca:
+      hostname: ca.gov
+      port: 7054
+    peers:
+      - peer0
+      - peer1
+    anchor_peers:
+      - host: peer0.gov.example.com
+        port: 7051
+    admin_role: admin
+    user_roles:
+      - user
+      - client
+
+  Notary:
+    name: Notary Services
+    domain: notary.example.com
+    msp_id: Org2MSP
+    ca:
+      hostname: ca.notary
+      port: 7054
+    peers:
+      - peer0
+      - peer1
+    anchor_peers:
+      - host: peer0.notary.example.com
+        port: 7051
+    admin_role: admin
+    user_roles:
+      - user
+      - client
+
+  Registry:
+    name: Property Registry
+    domain: registry.example.com
+    msp_id: Org3MSP
+    ca:
+      hostname: ca.registry
+      port: 7054
+    peers:
+      - peer0
+      - peer1
+    anchor_peers:
+      - host: peer0.registry.example.com
+        port: 7051
+    admin_role: admin
+    user_roles:
+      - user
+      - client
+
+orderer:
+  name: Orderer Service
+  domain: example.com
+  hostname: orderer.example.com
+  msp_id: OrdererMSP
+  type: solo
+  port: 7050
+  genesis:
+    method: file
+    file: channel-artifacts/genesis.block
+  ca:
+    hostname: ca.orderer
+    port: 7054
+
+peers:
+  Gov:
+    peer0:
+      hostname: peer0.gov.example.com
+      port: 7051
+      events_port: 7053
+      couchdb_port: 5984
+    peer1:
+      hostname: peer1.gov.example.com
+      port: 7051
+      events_port: 7053
+      couchdb_port: 5984
+
+  Notary:
+    peer0:
+      hostname: peer0.notary.example.com
+      port: 7051
+      events_port: 7053
+      couchdb_port: 5984
+    peer1:
+      hostname: peer1.notary.example.com
+      port: 7051
+      events_port: 7053
+      couchdb_port: 5984
+
+  Registry:
+    peer0:
+      hostname: peer0.registry.example.com
+      port: 7051
+      events_port: 7053
+      couchdb_port: 5984
+    peer1:
+      hostname: peer1.registry.example.com
+      port: 7051
+      events_port: 7053
+      couchdb_port: 5984
+
+chaincode:
+  name: property-cc
+  version: 1.0
+  path: github.com/hyperledger/fabric-samples/chaincode/abstore/go
+  language: golang
+  endorsement_policy:
+    type: channel
+    policy: "AND('Org1MSP.peer','Org2MSP.peer','Org3MSP.peer')"
+  invocation_policy: ""
+  collections: []
+
+endorsement_policies:
+  property_registration:
+    type: channel
+    policy: "AND('Org1MSP.peer','Org2MSP.peer','Org3MSP.peer')"
+    description: Requires all 3 organizations to approve property registration
+
+  property_transfer:
+    type: channel
+    policy: "OR('Org1MSP.peer','Org2MSP.peer','Org3MSP.peer')"
+    description: Requires at least 2 organizations to approve property transfer
+
+  ownership_verification:
+    type: channel
+    policy: "OR('Org1MSP.peer','Org2MSP.peer','Org3MSP.peer')"
+    description: Any organization can verify ownership
+
+capabilities:
+  channel: V2_0
+  orderer: V2_0
+  application: V2_0
+
+tls:
+  enabled: false
+  embedded: true
+  cert_path: crypto-config
+
+cassandra:
+  enabled: false
+
+couchdb:
+  enabled: false
+
+logging:
+  peer: INFO
+  ca: INFO
+  orderer: INFO
+  chaincode: INFO
+
+docker:
+  network_name: fabric-network
+  socket: /var/run/docker.sock
+
+storage:
+  path: /var/hyperledger

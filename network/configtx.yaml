@@ -1,0 +1,184 @@
+---
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: crypto-config/ordererOrganizations/example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererOrg.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererOrg.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererOrg.admin')"
+    OrdererEndpoints:
+      - orderer.example.com:7050
+
+  - &Gov
+    Name: GovMSP
+    ID: Org1MSP
+    MSPDir: crypto-config/peerOrganizations/gov.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('GovMSP.admin', 'GovMSP.peer', 'GovMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('GovMSP.admin', 'GovMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('GovMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('GovMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.gov.example.com
+        Port: 7051
+
+  - &Notary
+    Name: NotaryMSP
+    ID: Org2MSP
+    MSPDir: crypto-config/peerOrganizations/notary.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('NotaryMSP.admin', 'NotaryMSP.peer', 'NotaryMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('NotaryMSP.admin', 'NotaryMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('NotaryMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('NotaryMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.notary.example.com
+        Port: 7051
+
+  - &Registry
+    Name: RegistryMSP
+    ID: Org3MSP
+    MSPDir: crypto-config/peerOrganizations/registry.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('RegistryMSP.admin', 'RegistryMSP.peer', 'RegistryMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('RegistryMSP.admin', 'RegistryMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('RegistryMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('RegistryMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.registry.example.com
+        Port: 7051
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+  Capabilities:
+    <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  Addresses:
+    - orderer.example.com:7050
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+  Capabilities:
+    <<: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+
+Profiles:
+  ThreeOrgChannel:
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Gov
+        - *Notary
+        - *Registry
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: solo
+      Organizations:
+        - *OrdererOrg
+
+  SampleMultiNodeEtcdRaft:
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Gov
+        - *Notary
+        - *Registry
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      EtcdRaft:
+        Consenters:
+          - Host: orderer.example.com
+            Port: 7050
+            ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+            ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+      Organizations:
+        - *OrdererOrg

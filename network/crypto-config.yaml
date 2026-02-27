@@ -1,0 +1,58 @@
+---
+# Cryptogen Configuration for National Blockchain Property Register
+# This file defines the cryptographic material structure for Hyperledger Fabric
+
+# Path to the output directory for generated certificates
+crypto:
+  path: crypto-config
+
+# Orderer Organization
+OrdererOrgs:
+  - Name: Orderer
+    Domain: example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      Start: 0
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1
+
+# Peer Organizations
+PeerOrgs:
+  # Government Authority
+  - Name: Gov
+    Domain: gov.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+      Start: 0
+      SANS:
+        - "localhost"
+    Users:
+      Count: 2
+
+  # Notary Services
+  - Name: Notary
+    Domain: notary.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+      Start: 0
+      SANS:
+        - "localhost"
+    Users:
+      Count: 2
+
+  # Property Registry
+  - Name: Registry
+    Domain: registry.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+      Start: 0
+      SANS:
+        - "localhost"
+    Users:
+      Count: 2

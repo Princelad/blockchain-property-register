@@ -1,15 +1,15 @@
 # National Blockchain Property Register - Progress
 
 ## Phase 0: Development Setup (Pre-MVP)
-- [ ] Initialize Git repository with initial commit
-- [ ] Create directory structure
-- [ ] Create .gitignore for Go, Rust, Node.js
-- [ ] Create LICENSE file (MIT)
-- [ ] Create .env.example templates
-- [ ] Create initial docker-compose.yml
-- [ ] Create basic GitHub Actions workflow (CI)
-- [ ] Create CONTRIBUTING.md
-- [ ] Push to remote and merge to main
+- [X] Initialize Git repository with initial commit
+- [X] Create directory structure
+- [X] Create .gitignore for Go, Rust, Node.js
+- [X] Create LICENSE file (MIT)
+- [X] Create .env.example templates
+- [X] Create initial docker-compose.yml
+- [X] Create basic GitHub Actions workflow (CI)
+- [X] Create CONTRIBUTING.md
+- [X] Push to remote and merge to main
 
 ## Phase 1: Network Setup (MVP)
 - [ ] Design Fabric network topology (3 orgs, 2 peers each)

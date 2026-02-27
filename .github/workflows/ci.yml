@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Go (Chaincode)
+      - name: Go vet
+        working-directory: chaincode
+        run: go vet ./...
+
+      # Rust (Backend)
+      - name: Rust clippy
+        working-directory: backend
+        run: cargo clippy -- -D warnings
+
+      - name: Rust fmt check
+        working-directory: backend
+        run: cargo fmt --check
+
+      # Node.js (Frontend)
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: Frontend lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Frontend typecheck
+        working-directory: frontend
+        run: npm run typecheck

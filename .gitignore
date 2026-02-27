@@ -1,0 +1,28 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output
+*.out
+
+# Go workspace
+go.work
+
+# Dependency directories
+vendor/
+
+# Network artifacts
+network/crypto-config/
+network/channel-artifacts/
+*.block
+*.tx
+
+# Fabric
+chaincode.tar.gz
+property-chaincode

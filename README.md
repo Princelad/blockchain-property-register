@@ -101,6 +101,14 @@ See `progress.md` for detailed task tracking.
 - Node.js 20+ (for frontend)
 - PostgreSQL 15+
 
+## Getting Started
+
+```bash
+# Clone repository
+git clone https://github.com/Princelad/blockchain-property-register.git
+cd blockchain-property-register
+```
+
 ## Development Commands
 
 ### Go (Chaincode)

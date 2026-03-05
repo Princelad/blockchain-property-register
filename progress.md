@@ -12,7 +12,7 @@
 - [X] Push to remote and merge to main
 
 ## Phase 1: Network Setup (MVP)
-- [ ] Design Fabric network topology (3 orgs, 2 peers each)
+- [X] Design Fabric network topology (3 orgs, 2 peers each)
 - [ ] Create Docker Compose environment for local development
 - [ ] Configure orderer nodes with Raft consensus
 - [ ] Setup Fabric CA infrastructure

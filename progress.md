@@ -13,13 +13,13 @@
 
 ## Phase 1: Network Setup (MVP)
 - [X] Design Fabric network topology (3 orgs, 2 peers each)
-- [ ] Create Docker Compose environment for local development
-- [ ] Configure orderer nodes with Raft consensus
-- [ ] Setup Fabric CA infrastructure
-- [ ] Create application channel (property-channel)
-- [ ] Configure endorsement policies
-- [ ] Establish TLS communications
-- [ ] Document network configuration in `network/config.yaml`
+- [X] Create Docker Compose environment for local development
+- [X] Configure orderer nodes with Raft consensus
+- [X] Setup Fabric CA infrastructure
+- [X] Create application channel (property-channel)
+- [X] Configure endorsement policies
+- [X] Establish TLS communications
+- [X] Document network configuration in `network/config.yaml`
 
 ## Phase 2: Core Chaincode (MVP)
 - [ ] Define Go module structure

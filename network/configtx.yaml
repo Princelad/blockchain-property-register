@@ -16,6 +16,8 @@ Organizations:
         Rule: "OR('OrdererOrg.admin')"
     OrdererEndpoints:
       - orderer.example.com:7050
+      - orderer2.example.com:7050
+      - orderer3.example.com:7050
 
   - &Gov
     Name: GovMSP
@@ -112,6 +114,8 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
   Addresses:
     - orderer.example.com:7050
+    - orderer2.example.com:7050
+    - orderer3.example.com:7050
   BatchTimeout: 2s
   BatchSize:
     MaxMessageCount: 10
@@ -180,5 +184,13 @@ Profiles:
             Port: 7050
             ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
             ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+          - Host: orderer2.example.com
+            Port: 7050
+            ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+            ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+          - Host: orderer3.example.com
+            Port: 7050
+            ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+            ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
       Organizations:
         - *OrdererOrg

@@ -12,8 +12,8 @@ description: |
   National Blockchain Property Register Network Configuration
   - 3 Organizations (Gov, Notary, Registry)
   - 2 Peers per Organization
-  - Single Orderer Node (Solo for dev)
-  - Embedded TLS
+  - 3 Orderer Nodes (Raft Consensus)
+  - TLS Enabled
   - LevelDB State Database
 
 channel: property-channel
@@ -78,11 +78,15 @@ orderer:
   domain: example.com
   hostname: orderer.example.com
   msp_id: OrdererMSP
-  type: solo
+  type: etcdraft
   port: 7050
   genesis:
     method: file
     file: channel-artifacts/genesis.block
+  addresses:
+    - orderer.example.com:7050
+    - orderer2.example.com:7050
+    - orderer3.example.com:7050
   ca:
     hostname: ca.orderer
     port: 7054
@@ -157,8 +161,8 @@ capabilities:
   application: V2_0
 
 tls:
-  enabled: false
-  embedded: true
+  enabled: true
+  embedded: false
   cert_path: crypto-config
 
 cassandra:

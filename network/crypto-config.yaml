@@ -12,7 +12,7 @@ OrdererOrgs:
     Domain: example.com
     EnableNodeOUs: true
     Template:
-      Count: 1
+      Count: 3
       Start: 0
       SANS:
         - "localhost"
